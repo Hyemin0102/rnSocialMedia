@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import UserStory from "./components/UserStory/UserStory";
 import UserPosts from "./components/UserPosts/UserPosts";
+import { logPlugin } from "@babel/preset-env/lib/debug";
 
 const App = () => {
   const userStories = [
@@ -122,11 +123,10 @@ const App = () => {
   //로딩중인지 확인
   const [isLoading, setIsLoading] = useState(false);
 
-  const userPostsPageSize = 4; //한번에 가져올 페이지 수
+  const userPostsPageSize = 2; //한번에 가져올 페이지 수
   const [userPostsFetchedPage, setUserPostsFetchedPage] = useState(1);
   const [userPostsdRenderDate, setUserPostsRenderDate] = useState([]);
   const [isLoadingPosts, setIsLoadingPosts] = useState(false);
-
 
   const pagination = (data, currentPage, pageSize) => {
     const startIndex = (currentPage - 1) * pageSize; //0, 4, 8
@@ -145,6 +145,12 @@ const App = () => {
     const getInitialData = pagination(userStories, 1, userStoryPageSize);
     setUserStroiedRenderDate(getInitialData);
     setIsLoading(false);
+
+    setIsLoadingPosts(true);
+    //렌더링 시  처음 데이터 가져옴
+    const getInitialDataPosts = pagination(userPosts, 1, userPostsPageSize);
+    setUserPostsRenderDate(getInitialDataPosts);
+    setIsLoadingPosts(false);
   }, []);
 
 
@@ -191,8 +197,21 @@ const App = () => {
               </View>
             </>
           }
+          //반이 보였을 때 끝 도달 인식
+          onEndReachedThreshold={0.5}
+          onEndReached={() => {
+            if (isLoadingPosts) return;
+            setIsLoadingPosts(true);
+            const contentToAppendPost = pagination(userPosts, userPostsFetchedPage + 1, userPostsPageSize);
+            if (contentToAppendPost.length > 0) {
+              setUserPostsFetchedPage(userPostsFetchedPage + 1);
+              setUserPostsRenderDate(prev => [...prev, ...contentToAppendPost]);
+            }
+            console.log("page", userPostsFetchedPage);
+            setIsLoadingPosts(false);
+          }}
           showsVerticalScrollIndicator={false}
-          data={userPosts} renderItem={({ item }) => (
+          data={userPostsdRenderDate} renderItem={({ item }) => (
           <View style={globalStyle.userPostContainer}>
             <UserPosts
               firstName={item.firstName}
