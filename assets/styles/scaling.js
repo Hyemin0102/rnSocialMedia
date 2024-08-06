@@ -2,7 +2,6 @@ import {Dimensions} from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 
 const {width, height} = Dimensions.get('window');
-console.log(width, height);
 
 //small 기기 확인
 const isSmall = width <= 375 && !DeviceInfo.hasNotch();
@@ -18,7 +17,6 @@ const guidelineBaseWidth = () => {
 //375width 기기인 경우
 //marginRight: horizontalScale(10) 하면 11px 정도가 생김
 const horizontalScale = size => (width / guidelineBaseWidth()) * size;
-console.log(horizontalScale);
 
 const guidelineBaseHeight = () => {
   if (isSmall) {
