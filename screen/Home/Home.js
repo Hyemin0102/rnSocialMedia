@@ -14,8 +14,9 @@ import UserStory from '../../components/UserStory/UserStory';
 import UserPosts from '../../components/UserPosts/UserPosts';
 import {scaleFontSize} from '../../assets/styles/scaling';
 import globalStyle from '../../assets/styles/globalStyle';
+import {Routes} from '../../navigation/Routes';
 
-const Home = () => {
+const Home = ({navigation}) => {
   const userStories = [
     {
       name: 'hyemin',
