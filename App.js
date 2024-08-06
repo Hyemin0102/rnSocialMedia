@@ -1,117 +1,127 @@
-import React, { useState, useEffect } from "react";
-import { FlatList, SafeAreaView, Text, TouchableOpacity, View } from "react-native";
-import Title from "./components/Title/Title";
-import globalStyle from "./assets/styles/globalStyle";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
-import UserStory from "./components/UserStory/UserStory";
-import UserPosts from "./components/UserPosts/UserPosts";
-import { logPlugin } from "@babel/preset-env/lib/debug";
+import React, {useState, useEffect} from 'react';
+import {
+  FlatList,
+  SafeAreaView,
+  Text,
+  TouchableOpacity,
+  View,
+  Platform,
+  Switch,
+  StatusBar,
+} from 'react-native';
+import Title from './components/Title/Title';
+import globalStyle from './assets/styles/globalStyle';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {faEnvelope} from '@fortawesome/free-solid-svg-icons';
+import UserStory from './components/UserStory/UserStory';
+import UserPosts from './components/UserPosts/UserPosts';
+import {logPlugin} from '@babel/preset-env/lib/debug';
+import {horizontalScale, scaleFontSize} from './assets/styles/scaling';
 
 const App = () => {
   const userStories = [
     {
-      name: "hyemin",
+      name: 'hyemin',
       id: 1,
       //인터넷 주소를 가져온다면 uri 로 주소르 넣으면 되지만,
       //로컬 이미지인경우 경로 설정하기 위해 require 필요
-      profileImage: require("./assets/images/default_profile.png"),
+      profileImage: require('./assets/images/default_profile.png'),
     },
     {
-      name: "gwangrae",
+      name: 'gwangrae',
       id: 2,
-      profileImage: require("./assets/images/default_profile.png"),
+      profileImage: require('./assets/images/default_profile.png'),
     },
     {
-      name: "joeun",
+      name: 'joeun',
       id: 3,
-      profileImage: require("./assets/images/default_profile.png"),
+      profileImage: require('./assets/images/default_profile.png'),
     },
     {
-      name: "hyesung",
+      name: 'hyesung',
       id: 4,
-      profileImage: require("./assets/images/default_profile.png"),
+      profileImage: require('./assets/images/default_profile.png'),
     },
     {
-      name: "haekyu",
+      name: 'haekyu',
       id: 5,
-      profileImage: require("./assets/images/default_profile.png"),
+      profileImage: require('./assets/images/default_profile.png'),
     },
     {
-      name: "changhyeon",
+      name: 'changhyeon',
       id: 6,
-      profileImage: require("./assets/images/default_profile.png"),
+      profileImage: require('./assets/images/default_profile.png'),
     },
     {
-      name: "dongjun",
+      name: 'dongjun',
       id: 7,
-      profileImage: require("./assets/images/default_profile.png"),
+      profileImage: require('./assets/images/default_profile.png'),
     },
     {
-      name: "jongwon",
+      name: 'jongwon',
       id: 8,
-      profileImage: require("./assets/images/default_profile.png"),
+      profileImage: require('./assets/images/default_profile.png'),
     },
     {
-      name: "jihoon",
+      name: 'jihoon',
       id: 9,
-      profileImage: require("./assets/images/default_profile.png"),
+      profileImage: require('./assets/images/default_profile.png'),
     },
   ];
   const userPosts = [
     {
-      firstName: "Hyemin",
-      lastNAME: "Jo",
-      location: "Seoul",
+      firstName: 'Hyemin',
+      lastNAME: 'Jo',
+      location: 'Seoul',
       likes: 12,
       comments: 24,
       bookmarks: 50,
       id: 1,
-      image: require("./assets/images/default_post.png"),
-      profileImage: require("./assets/images/default_profile.png"),
+      image: require('./assets/images/default_post.png'),
+      profileImage: require('./assets/images/default_profile.png'),
     },
     {
-      firstName: "Soomin",
-      lastNAME: "Jo",
-      location: "Anyang",
+      firstName: 'Soomin',
+      lastNAME: 'Jo',
+      location: 'Anyang',
       likes: 255,
       comments: 34,
       bookmarks: 80,
       id: 2,
-      image: require("./assets/images/default_post.png"),
-      profileImage: require("./assets/images/default_profile.png"),
+      image: require('./assets/images/default_post.png'),
+      profileImage: require('./assets/images/default_profile.png'),
     },
     {
-      firstName: "chloe",
-      lastNAME: "Jo",
-      location: "Home",
+      firstName: 'chloe',
+      lastNAME: 'Jo',
+      location: 'Home',
       likes: 1245,
       comments: 99,
       bookmarks: 20,
       id: 3,
-      image: require("./assets/images/default_post.png"),
-      profileImage: require("./assets/images/default_profile.png"),
+      image: require('./assets/images/default_post.png'),
+      profileImage: require('./assets/images/default_profile.png'),
     },
     {
-      firstName: "Jenny",
-      lastNAME: "Kim",
-      location: "Busan",
+      firstName: 'Jenny',
+      lastNAME: 'Kim',
+      location: 'Busan',
       likes: 11,
       comments: 2,
       bookmarks: 100,
       id: 4,
-      image: require("./assets/images/default_post.png"),
-      profileImage: require("./assets/images/default_profile.png"),
+      image: require('./assets/images/default_post.png'),
+      profileImage: require('./assets/images/default_profile.png'),
     },
     {
-      firstName: "Max",
-      lastNAME: "Park",
-      location: "Anywere",
+      firstName: 'Max',
+      lastNAME: 'Park',
+      location: 'Anywere',
       likes: 8,
       comments: 16,
       id: 5,
-      image: require("./assets/images/default_post.png"),
-      profileImage: require("./assets/images/default_profile.png"),
+      image: require('./assets/images/default_post.png'),
+      profileImage: require('./assets/images/default_profile.png'),
     },
   ];
 
@@ -127,6 +137,9 @@ const App = () => {
   const [userPostsFetchedPage, setUserPostsFetchedPage] = useState(1);
   const [userPostsdRenderDate, setUserPostsRenderDate] = useState([]);
   const [isLoadingPosts, setIsLoadingPosts] = useState(false);
+
+  const [isOn, setIsOn] = useState(false);
+  console.log(Platform);
 
   const pagination = (data, currentPage, pageSize) => {
     const startIndex = (currentPage - 1) * pageSize; //0, 4, 8
@@ -153,22 +166,44 @@ const App = () => {
     setIsLoadingPosts(false);
   }, []);
 
+  //StatusBar 로 iOS, android 상태표시바 설정 가능. backgorunColor는 안드로이드만, barStyle light, dark-content 로 글자 색상 둘 다 변경
 
   return (
     <SafeAreaView>
+      {/*<StatusBar backgroundColor={'red'} barStyle={'dark-content'} />*/}
       <View>
         <FlatList
           ListHeaderComponent={
             <>
               <View style={globalStyle.header}>
-                <Title title={"Hi :) Let’s Explore"} />
+                <Title title={'Hi :) Let’s Explore'} />
                 <TouchableOpacity style={globalStyle.messageIcon}>
-                  <FontAwesomeIcon icon={faEnvelope} size={20} color={"#898DAE"} />
+                  <FontAwesomeIcon
+                    icon={faEnvelope}
+                    size={scaleFontSize(20)}
+                    color={'#898DAE'}
+                  />
                   <View style={globalStyle.messageNumberContainer}>
                     <Text style={globalStyle.messageNumber}>2</Text>
                   </View>
                 </TouchableOpacity>
               </View>
+              {/*<View*/}
+              {/*  style={{*/}
+              {/*    flex: 1,*/}
+              {/*    flexDirection: 'row',*/}
+              {/*    justifyContent: 'flex-start',*/}
+              {/*  }}>*/}
+              {/*  <Switch*/}
+              {/*    style={*/}
+              {/*      Platform.OS === 'android' && {*/}
+              {/*        transform: [{scaleX: 1.5}, {scaleY: 1.5}],*/}
+              {/*      }*/}
+              {/*    }*/}
+              {/*    value={isOn}*/}
+              {/*    onValueChange={value => setIsOn(value)}*/}
+              {/*  />*/}
+              {/*</View>*/}
               <View style={globalStyle.userStoryContainer}>
                 <FlatList
                   showsHorizontalScrollIndicator={false}
@@ -177,18 +212,25 @@ const App = () => {
                   onEndReached={() => {
                     if (isLoading) return; //로딩중이면 실행안함
                     setIsLoading(true); //로딩중아니면 로딩중 true로 먼저 하고,
-                    const contentToAppend = pagination(userStories, userStoriesFetchedPage + 1, userStoryPageSize);
+                    const contentToAppend = pagination(
+                      userStories,
+                      userStoriesFetchedPage + 1,
+                      userStoryPageSize,
+                    );
                     if (contentToAppend.length > 0) {
                       setUserStoriesFetchedPage(userStoriesFetchedPage + 1);
-                      setUserStroiedRenderDate(prev => [...prev, ...contentToAppend]);
+                      setUserStroiedRenderDate(prev => [
+                        ...prev,
+                        ...contentToAppend,
+                      ]);
                     }
                     setIsLoading(false);
                   }}
                   horizontal={true}
                   data={userStroiedRenderDate}
-                  renderItem={({ item }) => (
+                  renderItem={({item}) => (
                     <UserStory
-                      key={"userStory" + item.id}
+                      key={'userStory' + item.id}
                       name={item.name}
                       profileImage={item.profileImage}
                     />
@@ -202,29 +244,34 @@ const App = () => {
           onEndReached={() => {
             if (isLoadingPosts) return;
             setIsLoadingPosts(true);
-            const contentToAppendPost = pagination(userPosts, userPostsFetchedPage + 1, userPostsPageSize);
+            const contentToAppendPost = pagination(
+              userPosts,
+              userPostsFetchedPage + 1,
+              userPostsPageSize,
+            );
             if (contentToAppendPost.length > 0) {
               setUserPostsFetchedPage(userPostsFetchedPage + 1);
               setUserPostsRenderDate(prev => [...prev, ...contentToAppendPost]);
             }
-            console.log("page", userPostsFetchedPage);
             setIsLoadingPosts(false);
           }}
+          extraData={userPostsdRenderDate.length}
           showsVerticalScrollIndicator={false}
-          data={userPostsdRenderDate} renderItem={({ item }) => (
-          <View style={globalStyle.userPostContainer}>
-            <UserPosts
-              firstName={item.firstName}
-              lastName={item.lastNAME}
-              location={item.location}
-              likes={item.likes}
-              comments={item.comments}
-              bookmarks={item.bookmarks}
-              profileImage={item.profileImage}
-              image={item.image}
-            />
-          </View>
-        )}
+          data={userPostsdRenderDate}
+          renderItem={({item}) => (
+            <View style={globalStyle.userPostContainer}>
+              <UserPosts
+                firstName={item.firstName}
+                lastName={item.lastNAME}
+                location={item.location}
+                likes={item.likes}
+                comments={item.comments}
+                bookmarks={item.bookmarks}
+                profileImage={item.profileImage}
+                image={item.image}
+              />
+            </View>
+          )}
         />
       </View>
     </SafeAreaView>
